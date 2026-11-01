@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Daily">
+  <title>Daily Hours</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Daily Hours</h1>
+    <span id="today-label" class="muted"></span>
+  </header>
+
+  <main>
+    <!-- TODAY -->
+    <section id="view-today" class="view">
+      <div class="card timer-card">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 120 120" class="ring" aria-hidden="true">
+            <circle cx="60" cy="60" r="52" class="ring-bg"/>
+            <circle cx="60" cy="60" r="52" class="ring-fg" id="goal-ring"/>
+          </svg>
+          <div class="ring-text">
+            <div id="today-total" class="big">0:00</div>
+            <div id="goal-text" class="muted small">of 8h goal</div>
+          </div>
+        </div>
+        <div id="session-clock" class="session-clock muted">Not working</div>
+        <input id="session-note" class="note-input" type="text" placeholder="Note" maxlength="120">
+        <button id="toggle-btn" class="btn btn-big btn-start">Start working</button>
+      </div>
+
+      <div class="section-head">
+        <h2>Today's sessions</h2>
+        <button id="add-btn" class="btn btn-ghost">+ Add manually</button>
+      </div>
+      <ul id="today-list" class="list"></ul>
+    </section>
+
+    <!-- HISTORY -->
+    <section id="view-history" class="view" hidden>
+      <div class="section-head">
+        <h2>History</h2>
+        <button id="add-btn-2" class="btn btn-ghost">+ Add</button>
+      </div>
+      <div id="history-list"></div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section id="view-summary" class="view" hidden>
+      <div class="stats">
+        <div class="card stat"><div class="muted small">This week</div><div id="stat-week" class="stat-num">0:00</div></div>
+        <div class="card stat"><div class="muted small">This month</div><div id="stat-month" class="stat-num">0:00</div></div>
+        <div class="card stat"><div class="muted small">Avg / worked day</div><div id="stat-avg" class="stat-num">0:00</div></div>
+        <div class="card stat"><div class="muted small">Days worked (month)</div><div id="stat-days" class="stat-num">0</div></div>
+      </div>
+
+      <div class="card">
+        <h2>Last 7 days</h2>
+        <div id="chart" class="chart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Settings</h2>
+        <label class="row">
+          <span>Daily goal (hours)</span>
+          <input id="goal-input" type="number" min="0" max="24" step="0.5" inputmode="decimal">
+        </label>
+        <div class="btn-row">
+          <button id="export-json" class="btn">Back up data</button>
+          <button id="import-btn" class="btn">Restore backup</button>
+          <button id="export-csv" class="btn">Export CSV</button>
+        </div>
+        <input id="import-file" type="file" accept=".json,application/json" hidden>
+        <p class="muted small">Hours are saved on this device only. Back up now and then.</p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar">
+    <button class="tab active" data-view="today">
+      <svg class="tab-ico" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2h5"/></svg>Today
+    </button>
+    <button class="tab" data-view="history">
+      <svg class="tab-ico" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>History
+    </button>
+    <button class="tab" data-view="summary">
+      <svg class="tab-ico" viewBox="0 0 24 24"><path d="M5 20V12M12 20V5M19 20v-9"/></svg>Summary
+    </button>
+  </nav>
+
+  <!-- Entry editor -->
+  <dialog id="editor">
+    <form id="editor-form" method="dialog">
+      <h2 id="editor-title">Add session</h2>
+      <label>Date <input id="ed-date" type="date" required></label>
+      <div class="two">
+        <label>Start <input id="ed-start" type="time" required></label>
+        <label>End <input id="ed-end" type="time" required></label>
+      </div>
+      <label>Note <input id="ed-note" type="text" maxlength="120" placeholder="Optional"></label>
+      <p id="ed-error" class="error" hidden></p>
+      <div class="btn-row">
+        <button type="button" id="ed-delete" class="btn btn-danger" hidden>Delete</button>
+        <span class="spacer"></span>
+        <button type="button" id="ed-cancel" class="btn btn-ghost">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
